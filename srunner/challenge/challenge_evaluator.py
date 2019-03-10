@@ -26,6 +26,7 @@ from srunner.scenariomanager.carla_data_provider import CarlaActorPool
 from srunner.scenariomanager.scenario_manager import ScenarioManager
 from srunner.challenge.envs.server_manager import ServerManagerBinary, ServerManagerDocker
 from srunner.challenge.envs.sensor_interface import CallBack, CANBusSensor, HDMapReader
+from srunner.challenge.envs.scene_layout_sensors import SceneLayout, ObjectFinder
 from srunner.scenarios.challenge_basic import *
 from srunner.scenarios.config_parser import *
 from srunner.scenariomanager.scenario_manager import ScenarioManager
@@ -151,7 +152,7 @@ class ChallengeEvaluator(object):
 
         return vehicle
 
-    def setup_sensors(self, sensors, vehicle, world):
+    def setup_sensors(self, sensors, vehicle):
         """
         Create the sensors defined by the user and attach them to the ego-vehicle
         :param sensors: list of sensors
@@ -161,8 +162,14 @@ class ChallengeEvaluator(object):
         """
         bp_library = self.world.get_blueprint_library()
         for sensor_spec in sensors:
-            # These are the pseudosensors (not spawned)
-            if sensor_spec['type'].startswith('sensor.can_bus'):
+            # These are the pseudo-sensors (not spawned)
+            if sensor_spec['type'].startswith('sensor.scene_layout'):
+                # Static sensor that gives you the entire information from the world
+                sensor = SceneLayout(self.world)
+            elif sensor_spec['type'].startswith('sensor.object_finder'):
+                # This sensor returns the position of the objects in the scene.
+                ObjectFinder(self.world, sensor_spec['reading_frequency'])
+            elif sensor_spec['type'].startswith('sensor.can_bus'):
                 # The speedometer pseudo sensor is created directly here
                 sensor = CANBusSensor(vehicle, sensor_spec['reading_frequency'])
             elif sensor_spec['type'].startswith('sensor.hd_map'):
@@ -218,7 +225,7 @@ class ChallengeEvaluator(object):
             self.ego_vehicle.set_transform(config.ego_vehicle.transform)
 
         # setup sensors
-        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle, self.world)
+        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle)
 
     def prepare_ego_vehicle(self, config):
         """
@@ -234,7 +241,7 @@ class ChallengeEvaluator(object):
             self.ego_vehicle.set_transform(config.ego_vehicle.transform)
 
         # setup sensors
-        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle, self.world)
+        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle)
 
     def analyze_scenario(self, args, config, final_summary=False):
         """
