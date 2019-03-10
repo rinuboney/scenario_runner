@@ -75,7 +75,7 @@ class CANBusMeasurement(object):
 
 class CANBusSensor(object):
     """
-    Speed pseudo sensor that gets to read all the vehicle proprieties including speed.
+    CAN BUS pseudo sensor that gets to read all the vehicle proprieties including speed.
     This sensor is not placed at the CARLA environment. It is
     only an asynchronous interface to the forward speed.
     """
@@ -237,7 +237,7 @@ class SensorInterface(object):
         self._timestamps[tag] = -1
 
     def update_sensor(self, tag, data, timestamp):
-        if tag  not in self._sensors_objects:
+        if tag not in self._sensors_objects:
             raise ValueError("The sensor with tag [{}] has not been created!".format(tag))
         self._data_buffers[tag] = data
         self._timestamps[tag] = timestamp

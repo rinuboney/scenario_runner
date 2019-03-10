@@ -151,11 +151,12 @@ class ChallengeEvaluator(object):
 
         return vehicle
 
-    def setup_sensors(self, sensors, vehicle):
+    def setup_sensors(self, sensors, vehicle, world):
         """
         Create the sensors defined by the user and attach them to the ego-vehicle
         :param sensors: list of sensors
         :param vehicle: ego vehicle
+        :param world: the world, that by having world related sensors it is now needed
         :return:
         """
         bp_library = self.world.get_blueprint_library()
@@ -217,7 +218,7 @@ class ChallengeEvaluator(object):
             self.ego_vehicle.set_transform(config.ego_vehicle.transform)
 
         # setup sensors
-        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle)
+        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle, self.world)
 
     def prepare_ego_vehicle(self, config):
         """
@@ -233,7 +234,7 @@ class ChallengeEvaluator(object):
             self.ego_vehicle.set_transform(config.ego_vehicle.transform)
 
         # setup sensors
-        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle)
+        self.setup_sensors(self.agent_instance.sensors(), self.ego_vehicle, self.world)
 
     def analyze_scenario(self, args, config, final_summary=False):
         """
