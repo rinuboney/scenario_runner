@@ -10,7 +10,6 @@ class SceneLayoutMeasurement(object):
         self.frame_number = frame_number
 
 class SceneLayout(object):
-
     def __init__(self, world):
         """
 
@@ -20,28 +19,22 @@ class SceneLayout(object):
 
         # The static scene dictionary of all the entire scene layout.
         self.static_scene_dict = scene_layout_parser.get_scene_layout(world)
+        # Callback attribute to set the function being used.
+        self._callback = None
 
         # Just connect the scene layout directly with the sensors
         self.read_scene_layout()
 
-
-
     def __call__(self):
-
         return self.static_scene_dict
-
 
     def read_scene_layout(self):
         if self._callback is not None:
             self._callback(SceneLayoutMeasurement(self.__call__(), 0))
 
-
     def listen(self, callback):
         # Tell that this function receives what the producer does.
         self._callback = callback
-
-    #def destroy(self):
-    #    self._run_ps = False
 
 class ObjectMeasurements(object):
     def __init__(self, data, frame_number):
