@@ -52,6 +52,10 @@ class SceneLayout(object):
         # Tell that this function receives what the producer does.
         self._callback = callback
 
+    def destroy(self):
+        # Nothing to destroy here.
+        pass
+
 
 class ObjectMeasurements(object):
     def __init__(self, data, frame_number):
