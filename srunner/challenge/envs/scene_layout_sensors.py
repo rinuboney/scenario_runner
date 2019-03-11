@@ -4,37 +4,42 @@ import time
 import util.scene_layout as scene_layout_parser
 from srunner.challenge.envs.sensor_interface import threaded
 
+
 class SceneLayoutMeasurement(object):
     def __init__(self, data, frame_number):
         self.data = data
         self.frame_number = frame_number
 
+
 class SceneLayout(object):
     def __init__(self, world):
         """
-
-        :param acc:
-        :param reading_frequency:
+            The scene layout just requires a reference to world where you will
+            extract all the necessary information.
         """
 
         # The static scene dictionary of all the entire scene layout.
         self.static_scene_dict = scene_layout_parser.get_scene_layout(world)
         # Callback attribute to set the function being used.
         self._callback = None
-
         # Just connect the scene layout directly with the sensors
         self.read_scene_layout()
 
     def __call__(self):
         return self.static_scene_dict
 
+    @threaded  # This thread just produces the callback once and dies.
     def read_scene_layout(self):
-        if self._callback is not None:
-            self._callback(SceneLayoutMeasurement(self.__call__(), 0))
+        while True:
+            # We will wait for the callback to be defined, produce a layout and then die.
+            if self._callback is not None:
+                self._callback(SceneLayoutMeasurement(self.__call__(), 0))
+                break
 
     def listen(self, callback):
         # Tell that this function receives what the producer does.
         self._callback = callback
+
 
 class ObjectMeasurements(object):
     def __init__(self, data, frame_number):
@@ -53,7 +58,6 @@ class ObjectFinder(object):
             other dynamic objects in the scene and their properties.
         """
         # Give the entire access there
-
         # The vehicle where the class reads the speed
         self._world = world
         # How often do you look at your speedometer in hz
@@ -70,7 +74,6 @@ class ObjectFinder(object):
 
     @threaded
     def find_objects(self):
-
         latest_speed_read = time.time()
         while self._run_ps:
             if self._callback is not None:

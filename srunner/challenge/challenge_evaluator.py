@@ -168,7 +168,7 @@ class ChallengeEvaluator(object):
                 sensor = SceneLayout(self.world)
             elif sensor_spec['type'].startswith('sensor.object_finder'):
                 # This sensor returns the position of the objects in the scene.
-                ObjectFinder(self.world, sensor_spec['reading_frequency'])
+                sensor = ObjectFinder(self.world, sensor_spec['reading_frequency'])
             elif sensor_spec['type'].startswith('sensor.can_bus'):
                 # The speedometer pseudo sensor is created directly here
                 sensor = CANBusSensor(vehicle, sensor_spec['reading_frequency'])
