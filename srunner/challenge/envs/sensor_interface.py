@@ -153,9 +153,6 @@ class CANBusSensor(object):
             'wheels': wheels_list_dict
         }
 
-
-
-
     @threaded
     def read_CAN_Bus(self):
         latest_speed_read = time.time()
@@ -230,7 +227,7 @@ class SensorInterface(object):
         self._timestamps = {}
 
     def register_sensor(self, tag, sensor):
-        if tag  in self._sensors_objects:
+        if tag in self._sensors_objects:
             raise ValueError("Duplicated sensor tag [{}]".format(tag))
 
         self._sensors_objects[tag] = sensor
