@@ -1,8 +1,20 @@
 
 import time
 
+from threading import Thread
 import util.scene_layout as scene_layout_parser
-from srunner.challenge.envs.sensor_interface import threaded
+
+# Eliminate this repetition
+
+
+def threaded(fn):
+    def wrapper(*args, **kwargs):
+        thread = Thread(target=fn, args=args, kwargs=kwargs)
+        thread.setDaemon(True)
+        thread.start()
+
+        return thread
+    return wrapper
 
 
 class SceneLayoutMeasurement(object):

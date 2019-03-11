@@ -9,6 +9,7 @@ import carla
 
 from srunner.challenge.envs.scene_layout_sensors import SceneLayoutMeasurement, ObjectMeasurements
 
+
 def threaded(fn):
     def wrapper(*args, **kwargs):
         thread = Thread(target=fn, args=args, kwargs=kwargs)
@@ -17,6 +18,7 @@ def threaded(fn):
 
         return thread
     return wrapper
+
 
 class HDMapMeasurement(object):
     def __init__(self, data, frame_number):
